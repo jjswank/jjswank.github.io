@@ -1,0 +1,5 @@
+{
+    "componentChunkName": "component---src-pages-index-js",
+    "path": "/",
+    "result": {"data":{"site":{"siteMetadata":{"title":"JJ Swank Dev Blog"}},"allMarkdownRemark":{"nodes":[{"excerpt":"When looking to build a personal blog I decided to go with GatsbyJS for a couple reasons: Cost: This site is served as static content from a…","fields":{"slug":"/how-i-built-this/"},"frontmatter":{"date":"May 02, 2022","title":"How I Built This","description":"Hello World personal blog with GatsbyJS"}}]}},"pageContext":{}},
+    "staticQueryHashes": ["2841359383","3257411868"]}
