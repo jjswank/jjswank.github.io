@@ -1,4 +1,99 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[JJ Swank Dev Blog]]></title><description><![CDATA[A starter blog demonstrating what Gatsby can do.]]></description><link>https://gatsbystarterblogsource.gatsbyjs.io</link><generator>GatsbyJS</generator><lastBuildDate>Mon, 02 May 2022 23:17:57 GMT</lastBuildDate><item><title><![CDATA[How I Built This]]></title><description><![CDATA[When looking to build a personal blog I decided to go with GatsbyJS for a couple reasons: Cost: This site is served as static content from a…]]></description><link>https://gatsbystarterblogsource.gatsbyjs.io/how-i-built-this/</link><guid isPermaLink="false">https://gatsbystarterblogsource.gatsbyjs.io/how-i-built-this/</guid><pubDate>Mon, 02 May 2022 22:12:03 GMT</pubDate><content:encoded>&lt;p&gt;When looking to build a personal blog I decided to go with GatsbyJS for a couple reasons:&lt;/p&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[JJ Swank Dev Blog]]></title><description><![CDATA[A starter blog demonstrating what Gatsby can do.]]></description><link>https://gatsbystarterblogsource.gatsbyjs.io</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 03 May 2022 22:14:31 GMT</lastBuildDate><item><title><![CDATA[Part 2: How I Built This]]></title><description><![CDATA[Instead of relying on manual deploys to publish changes to the blog I wanted to automate this work eveytime a merge is made to main. To do…]]></description><link>https://gatsbystarterblogsource.gatsbyjs.io/how-i-built-this-2/</link><guid isPermaLink="false">https://gatsbystarterblogsource.gatsbyjs.io/how-i-built-this-2/</guid><pubDate>Mon, 02 May 2022 23:12:03 GMT</pubDate><content:encoded>&lt;p&gt;Instead of relying on manual deploys to publish changes to the blog I wanted to automate this work eveytime a merge is made to main. To do this I created a github action that runs on merges.&lt;/p&gt;
+&lt;h1&gt;Getting started&lt;/h1&gt;
+&lt;ol&gt;
+&lt;li&gt;Create a file in your repository called &lt;code class=&quot;language-text&quot;&gt;.github\workflows\build-and-deploy.yml&lt;/code&gt;:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;name: build-and-deploy
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: &apos;14&apos;
+      - run: npm install
+      - run: npm run build
+      - run: |
+          git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+          npx gh-pages -d public -u &quot;github-actions-bot &amp;lt;support+actions@github.com&gt;&quot;
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;This creates a new github action that runs whenever there is a merge to the main branch. It will build the production version of the application and push it to the gh-pages branch automatically.&lt;/p&gt;
+&lt;ol start=&quot;2&quot;&gt;
+&lt;li&gt;Commit and push the change up to your repository. Github should automatically detect the file and create a new action.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/f1df0b8b491b25b3d82cfa2051619360/63bea/github-actions.jpg&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 27.848101265822784%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAAGABQDASIAAhEBAxEB/8QAFwABAAMAAAAAAAAAAAAAAAAAAAECBf/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/9oADAMBAAIQAxAAAAHcsJIX/8QAFRABAQAAAAAAAAAAAAAAAAAAEBH/2gAIAQEAAQUCj//EABQRAQAAAAAAAAAAAAAAAAAAABD/2gAIAQMBAT8BP//EABQRAQAAAAAAAAAAAAAAAAAAABD/2gAIAQIBAT8BP//EABcQAAMBAAAAAAAAAAAAAAAAAAEQESH/2gAIAQEABj8C01//xAAXEAEAAwAAAAAAAAAAAAAAAAABEBHB/9oACAEBAAE/IRGCp//aAAwDAQACAAMAAAAQfA//xAAUEQEAAAAAAAAAAAAAAAAAAAAQ/9oACAEDAQE/ED//xAAUEQEAAAAAAAAAAAAAAAAAAAAQ/9oACAECAQE/ED//xAAbEAACAQUAAAAAAAAAAAAAAAAAAREhMUFRYf/aAAgBAQABPxCxmmASlTCK8P/Z&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;Github Actions Page&quot;
+        title=&quot;Github Actions Page&quot;
+        src=&quot;/static/f1df0b8b491b25b3d82cfa2051619360/828fb/github-actions.jpg&quot;
+        srcset=&quot;/static/f1df0b8b491b25b3d82cfa2051619360/ff44c/github-actions.jpg 158w,
+/static/f1df0b8b491b25b3d82cfa2051619360/a6688/github-actions.jpg 315w,
+/static/f1df0b8b491b25b3d82cfa2051619360/828fb/github-actions.jpg 630w,
+/static/f1df0b8b491b25b3d82cfa2051619360/0ede0/github-actions.jpg 945w,
+/static/f1df0b8b491b25b3d82cfa2051619360/63bea/github-actions.jpg 1251w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+        decoding=&quot;async&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Clicking through you can see the completed job steps as they run:&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/static/bd8651152bf169856aee5d8d10091b7f/3ac88/github-actions-2.jpg&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 45.56962025316456%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAAJABQDASIAAhEBAxEB/8QAFwAAAwEAAAAAAAAAAAAAAAAAAAMFBv/EABUBAQEAAAAAAAAAAAAAAAAAAAAB/9oADAMBAAIQAxAAAAGjn72aR4gr/8QAGxAAAQQDAAAAAAAAAAAAAAAAAwABBBMCEDT/2gAIAQEAAQUClu+ILiq4qnc+v//EABQRAQAAAAAAAAAAAAAAAAAAABD/2gAIAQMBAT8BP//EABQRAQAAAAAAAAAAAAAAAAAAABD/2gAIAQIBAT8BP//EABwQAAEEAwEAAAAAAAAAAAAAAAACETORARAhgf/aAAgBAQAGPwJ05bpIqyRVnu//xAAZEAEAAgMAAAAAAAAAAAAAAAABEBEhMXH/2gAIAQEAAT8hdIVMknFv4n//2gAMAwEAAgADAAAAEEwf/8QAFBEBAAAAAAAAAAAAAAAAAAAAEP/aAAgBAwEBPxA//8QAFREBAQAAAAAAAAAAAAAAAAAAARD/2gAIAQIBAT8QJ//EABsQAAIBBQAAAAAAAAAAAAAAAAERABBRwfDx/9oACAEBAAE/EFQetRThEcidrNPev//Z&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;Github Actions Page&quot;
+        title=&quot;Github Actions Page&quot;
+        src=&quot;/static/bd8651152bf169856aee5d8d10091b7f/828fb/github-actions-2.jpg&quot;
+        srcset=&quot;/static/bd8651152bf169856aee5d8d10091b7f/ff44c/github-actions-2.jpg 158w,
+/static/bd8651152bf169856aee5d8d10091b7f/a6688/github-actions-2.jpg 315w,
+/static/bd8651152bf169856aee5d8d10091b7f/828fb/github-actions-2.jpg 630w,
+/static/bd8651152bf169856aee5d8d10091b7f/0ede0/github-actions-2.jpg 945w,
+/static/bd8651152bf169856aee5d8d10091b7f/3ac88/github-actions-2.jpg 1260w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+        decoding=&quot;async&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Thats it. Now whenever a change or blog post is commited to the main branch, the site will rebuild and deploy.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[How I Built This]]></title><description><![CDATA[When looking to build a personal blog I decided to go with GatsbyJS for a couple reasons: Cost: This site is served as static content from a…]]></description><link>https://gatsbystarterblogsource.gatsbyjs.io/how-i-built-this/</link><guid isPermaLink="false">https://gatsbystarterblogsource.gatsbyjs.io/how-i-built-this/</guid><pubDate>Mon, 02 May 2022 22:12:03 GMT</pubDate><content:encoded>&lt;p&gt;When looking to build a personal blog I decided to go with GatsbyJS for a couple reasons:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;
 &lt;p&gt;&lt;strong&gt;Cost&lt;/strong&gt;: This site is served as static content from a CDN so there is very little cost to hosting. I only have to pay for the amount of traffic I receive. There is no cost to idle servers. With github pages, there is not cost of hosting.&lt;/p&gt;
