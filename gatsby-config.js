@@ -9,6 +9,7 @@ module.exports = {
     siteUrl: `https://gatsbystarterblogsource.gatsbyjs.io/`,
   },
   plugins: [
+    `gatsby-plugin-netlify-cms`,
     `gatsby-plugin-image`,
     {
       resolve: `gatsby-source-filesystem`,
