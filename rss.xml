@@ -1,4 +1,43 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[JJ Swank Dev Blog]]></title><description><![CDATA[A starter blog demonstrating what Gatsby can do.]]></description><link>https://gatsbystarterblogsource.gatsbyjs.io</link><generator>GatsbyJS</generator><lastBuildDate>Tue, 03 May 2022 23:01:19 GMT</lastBuildDate><item><title><![CDATA[Part 2: How I Built This]]></title><description><![CDATA[Instead of relying on manual deploys to publish changes to the blog I wanted to automate this work eveytime a merge is made to main. To do…]]></description><link>https://gatsbystarterblogsource.gatsbyjs.io/how-i-built-this-2/</link><guid isPermaLink="false">https://gatsbystarterblogsource.gatsbyjs.io/how-i-built-this-2/</guid><pubDate>Mon, 02 May 2022 23:12:03 GMT</pubDate><content:encoded>&lt;p&gt;Instead of relying on manual deploys to publish changes to the blog I wanted to automate this work eveytime a merge is made to main. To do this I created a github action that runs on merges.&lt;/p&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[JJ Swank Dev Blog]]></title><description><![CDATA[A starter blog demonstrating what Gatsby can do.]]></description><link>https://gatsbystarterblogsource.gatsbyjs.io</link><generator>GatsbyJS</generator><lastBuildDate>Wed, 04 May 2022 00:53:05 GMT</lastBuildDate><item><title><![CDATA[Part 3: How I Built This]]></title><description><![CDATA[The goal of this project is to add a CMS for editing blog posts without having to run the application locally and make git commits. This…]]></description><link>https://gatsbystarterblogsource.gatsbyjs.io/part-3-how-i-built-this/</link><guid isPermaLink="false">https://gatsbystarterblogsource.gatsbyjs.io/part-3-how-i-built-this/</guid><pubDate>Wed, 04 May 2022 00:36:58 GMT</pubDate><content:encoded>&lt;p&gt;The goal of this project is to add a CMS for editing blog posts without having to run the application locally and make git commits. This entire blog post was written and published doing exactly that.&lt;/p&gt;
+&lt;p&gt;To accomplish this I chose Netlify CMS. It provides a UI for editing the blog content. There is no backend. When the blog posts are saved, Netlify CMS makes a commit directly to github, triggering a new build to publish the changes.&lt;/p&gt;
+&lt;h1&gt;Getting Started&lt;/h1&gt;
+&lt;ol&gt;
+&lt;li&gt;The first step is to add the netlify cms app and plugin to your application:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;npm install --save netlify-cms-app gatsby-plugin-netlify-cms&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ol start=&quot;2&quot;&gt;
+&lt;li&gt;Next create a new file called &lt;code class=&quot;language-text&quot;&gt;static/admin/config.yml&lt;/code&gt; to configure the cms application. Add in the following text:&lt;/li&gt;
+&lt;/ol&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;text&quot;&gt;&lt;pre class=&quot;language-text&quot;&gt;&lt;code class=&quot;language-text&quot;&gt;backend:
+  name: github
+  repo: &amp;lt;GITHUB_USERNAME&gt;/&amp;lt;GITHUB_REPO_NAME&gt;
+  branch: main
+
+media_folder: static/img
+public_folder: /img
+
+collections:
+  - name: &apos;blog&apos;
+    label: &apos;Blog&apos;
+    folder: &apos;content/blog&apos;
+    create: true
+    slug: &apos;index&apos;
+    media_folder: &apos;&apos;
+    public_folder: &apos;&apos;
+    path: &apos;{{title}}/index&apos;
+    editor:
+      preview: false
+    fields:
+      - { label: &apos;Title&apos;, name: &apos;title&apos;, widget: &apos;string&apos; }
+      - { label: &apos;Publish Date&apos;, name: &apos;date&apos;, widget: &apos;datetime&apos; }
+      - { label: &apos;Description&apos;, name: &apos;description&apos;, widget: &apos;string&apos; }
+      - { label: &apos;Body&apos;, name: &apos;body&apos;, widget: &apos;markdown&apos; }&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ol start=&quot;3&quot;&gt;
+&lt;li&gt;In the &lt;code class=&quot;language-text&quot;&gt;gatsby-config.js&lt;/code&gt; file you need to add &lt;code class=&quot;language-text&quot;&gt;gatsby-plugin-netlify-cms&lt;/code&gt; to the plugins array. This will add the &lt;code class=&quot;language-text&quot;&gt;/admin&lt;/code&gt; endpoint to your application to access the CMS.&lt;/li&gt;
+&lt;li&gt;Lastly you will need to configure netlify to handle the authentication. This requires creating a netlify account and creating a netlify site. This can be done for free. For more information in this see the &lt;a href=&quot;https://docs.netlify.com/visitor-access/git-gateway/&quot;&gt;Netlify documentation&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h1&gt;Thats It&lt;/h1&gt;
+&lt;p&gt;Once you push your changes you should be able to access the &lt;code class=&quot;language-text&quot;&gt;/admin&lt;/code&gt; endpoint and login with github. From there you can edit and create new blog posts. This entire blog post was made without pulling or running the application locally.&lt;/p&gt;</content:encoded></item><item><title><![CDATA[Part 2: How I Built This]]></title><description><![CDATA[Instead of relying on manual deploys to publish changes to the blog I wanted to automate this work eveytime a merge is made to main. To do…]]></description><link>https://gatsbystarterblogsource.gatsbyjs.io/how-i-built-this-2/</link><guid isPermaLink="false">https://gatsbystarterblogsource.gatsbyjs.io/how-i-built-this-2/</guid><pubDate>Mon, 02 May 2022 23:12:03 GMT</pubDate><content:encoded>&lt;p&gt;Instead of relying on manual deploys to publish changes to the blog I wanted to automate this work eveytime a merge is made to main. To do this I created a github action that runs on merges.&lt;/p&gt;
 &lt;h1&gt;Getting started&lt;/h1&gt;
 &lt;ol&gt;
 &lt;li&gt;Create a file in your repository called &lt;code class=&quot;language-text&quot;&gt;.github\workflows\build-and-deploy.yml&lt;/code&gt;:&lt;/li&gt;
